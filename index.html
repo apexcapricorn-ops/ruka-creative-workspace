@@ -306,12 +306,29 @@ async function initGoogleDrive() {
     driveTokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: GOOGLE_SCOPES,
+      error_callback: (error) => {
+        console.error("Google OAuth popup:", error);
+        driveConnected = false;
+        render();
+        modal(`
+          <h3>Jendela izin Google tertutup</h3>
+          <p>Google tidak menyelesaikan proses izin ke RUKA.</p>
+          <small><b>Jenis:</b> ${e(error?.type || "unknown")}<br><b>Detail:</b> ${e(error?.message || "Tidak ada detail dari Google.")}</small>
+          <div class="row"><button class="b" data-x>Close</button></div>
+        `);
+      },
       callback: async (response) => {
         if (response.error || !response.access_token) {
           driveConnected = false;
+          driveAccessToken = null;
           render();
           console.error("Google OAuth:", response);
-          toast(response.error_description || "Google login gagal atau dibatalkan.");
+          modal(`
+            <h3>Google belum memberikan akses</h3>
+            <p>RUKA menerima respons OAuth tanpa token akses.</p>
+            <small><b>Error:</b> ${e(response.error || "no_access_token")}<br><b>Detail:</b> ${e(response.error_description || "Google tidak memberikan keterangan tambahan.")}</small>
+            <div class="row"><button class="b" data-x>Close</button></div>
+          `);
           return;
         }
 
