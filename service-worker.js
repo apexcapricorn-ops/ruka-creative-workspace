@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ruka-shell-v1';
+const CACHE_NAME = 'ruka-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',
