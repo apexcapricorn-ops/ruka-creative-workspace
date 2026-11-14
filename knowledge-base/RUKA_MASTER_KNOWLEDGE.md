@@ -100,3 +100,8 @@ Lihat [Drive Audit](01-drive-audit.md) dan [Resource Register](03-resource-regis
 - [Project Tracking Index](project-tracking/README.md)
 - [Project Record Template](project-tracking/project-record-template.md)
 - [Statuses and Workflow](project-tracking/statuses-and-workflow.md)
+
+## 9. Project tracking documentation
+- [Project Tracking Index](project-tracking/README.md)
+- [Project Record Template](project-tracking/project-record-template.md)
+- [Statuses and Workflow](project-tracking/statuses-and-workflow.md)
