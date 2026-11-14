@@ -104,3 +104,14 @@ Gunakan label berikut di seluruh dokumen:
 4. Tinjau shared folders lama sebelum klasifikasi.
 5. Lengkapi profil brand dan SOP berdasarkan dokumen sumber atau konfirmasi pengguna.
 6. Hubungkan knowledge base ke tampilan aplikasi RUKA hanya setelah struktur dan kebutuhan integrasi ditinjau.
+
+## 9. Creative Knowledge Base
+
+The creative knowledge collection is the first priority for detailed knowledge extraction:
+- [Creative Knowledge Index](creative/README.md)
+- [Creative Principles](creative/01-creative-principles.md)
+- [Production Workflows](creative/02-production-workflows.md)
+- [AI Prompt Standards](creative/03-ai-prompt-standards.md)
+- [Project Examples & Reference Cases](creative/04-project-examples.md)
+
+This initial collection is based on explicit user instructions and prior project examples. It is a working baseline, not a complete extraction of Google Drive. Apply current task instructions over general defaults, and do not infer official brand rules from isolated project examples.
