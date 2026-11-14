@@ -360,9 +360,20 @@ async function initGoogleDrive() {
 }
 
 async function connectGoogleDrive() {
+  // If already initialized, request the token immediately inside the user's click.
+  // Do not await anything before requestAccessToken: Google Identity Services
+  // requires a direct user gesture to open its consent popup.
+  if (driveTokenClient) {
+    driveTokenClient.requestAccessToken({ prompt: "consent" });
+    return;
+  }
+
+  // First click only loads Google libraries and prepares the token client.
+  // Ask the user to click Connect again so the OAuth popup is opened directly
+  // from a fresh user gesture.
   try {
     await initGoogleDrive();
-    driveTokenClient.requestAccessToken({ prompt: "consent" });
+    toast("Google Drive siap. Klik Connect Google Drive sekali lagi untuk memberi izin.");
   } catch (error) {
     console.error("Google Drive initialization:", error);
     modal(`
