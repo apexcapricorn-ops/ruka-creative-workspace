@@ -23,3 +23,10 @@ Dokumen ini dibangun dari laporan audit yang diberikan pengguna pada 14 November
 3. Jangan menganggap file tidak ada hanya karena pencarian tidak menemukannya.
 4. Jangan menyimpulkan isi file dari nama file saja.
 5. Tandai informasi yang belum diverifikasi secara eksplisit.
+
+## Creative Knowledge Base
+- [Creative Knowledge](creative/README.md) — principles, production workflows, AI prompt standards, and project examples.
+- [Creative Principles](creative/01-creative-principles.md)
+- [Production Workflows](creative/02-production-workflows.md)
+- [AI Prompt Standards](creative/03-ai-prompt-standards.md)
+- [Project Examples](creative/04-project-examples.md)
