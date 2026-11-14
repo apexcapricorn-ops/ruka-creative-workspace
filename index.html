@@ -264,6 +264,86 @@ function settings(){const s=S.set,PR=[['RUKA','#A7F508,#B217F3'],['Ocean','#03E1
 <div class="cd"><h2>Google Drive</h2><p>${bd('Not connected','#F31752')}</p><small>Sync is not available in this hosted version. Data is stored on this device.</small><div class="row"><button class="b p" data-a="drv">Connect Google Drive</button></div></div>
 <div class="cd"><h2>Data</h2><div class="row" style="margin:0"><button class="b" data-a="exp">Export / backup</button><button class="b" data-a="imp">Import / restore</button><button class="b d" data-a="clr">Clear demo data</button></div></div>
 <div class="cd"><h2>About RUKA</h2><p><b>RUKA</b>, Your Creative Workspace<br><small>Version 0.1. Local-first workspace for freelance design work.</small></p></div></div>`}
+
+
+async function initGoogleDrive() {
+  if (!window.gapi || !window.google?.accounts?.oauth2) {
+    throw new Error("Google API belum siap. Refresh halaman dan coba lagi.");
+  }
+
+  await new Promise((resolve, reject) => {
+    gapi.load("client", {
+      callback: resolve,
+      onerror: () => reject(new Error("Google API gagal dimuat."))
+    });
+  });
+
+  await gapi.client.init({
+    discoveryDocs: [GOOGLE_DISCOVERY_DOC]
+  });
+
+  driveTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: GOOGLE_SCOPES,
+    callback: async (response) => {
+      if (response.error) {
+        driveConnected = false;
+        console.error("Google OAuth:", response);
+        toast("Google login gagal");
+        return;
+      }
+
+      driveAccessToken = response.access_token;
+      driveConnected = true;
+
+      gapi.client.setToken({
+        access_token: driveAccessToken
+      });
+
+      try {
+        const result = await gapi.client.drive.files.list({
+          pageSize: 10,
+          q: "trashed = false",
+          fields: "files(id,name,mimeType)"
+        });
+
+        const files = result.result.files || [];
+
+        modal(`
+          <h3>Google Drive Connected</h3>
+          <p>${bd("Connected","#A7F508")}</p>
+          <p>Pengujian berhasil. RUKA dapat membaca Google Drive.</p>
+          <p>File ditemukan: <b>${files.length}</b></p>
+          <small>Akses read-only. Tidak ada file yang diubah.</small>
+          <div class="row">
+            <button class="b" data-x>Close</button>
+          </div>
+        `);
+      } catch (error) {
+        driveConnected = false;
+        console.error("Drive API:", error);
+        toast("Gagal membaca Google Drive");
+      }
+    }
+  });
+}
+
+async function connectGoogleDrive() {
+  try {
+    await initGoogleDrive();
+    driveTokenClient.requestAccessToken({prompt: "consent"});
+  } catch (error) {
+    console.error(error);
+    modal(`
+      <h3>Google Drive</h3>
+      <p>${error.message}</p>
+      <div class="row">
+        <button class="b" data-x>Close</button>
+      </div>
+    `);
+  }
+}
+
 const more=()=>`<h1>More</h1><div class="gr">${MORE.map(x=>`<button class="cd" data-a="nav" data-v="${x[0]}" style="display:flex;gap:12px;align-items:center;font-weight:700">${ic(x[2])}${x[1]}</button>`).join('')}</div>`;
 const PG={dash,tasks,projects,cal,notes,finance,settings,more};
 function render(){const on=v=>v==view||(v=='more'&&MORE.some(x=>x[0]==view))?'on':'',ni=n=>`<button class="ni ${on(n[0])}" data-a="nav" data-v="${n[0]}">${ic(n[2])}<span>${n[1]}</span></button>`;
