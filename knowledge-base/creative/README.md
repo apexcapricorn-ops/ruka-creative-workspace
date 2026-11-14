@@ -1,3 +1,7 @@
+# Creative References — Supporting Project Information
+
+> **Scope disclaimer:** RUKA is a project tracking workspace, not an AI design assistant. This directory is retained only as a reference catalog of past user preferences and example creative deliverables. It does not define a service for generating or editing designs. Use these notes only to label, organize, track, review, or link project assets.
+
 # Ruka Creative Knowledge Base
 
 **Priority:** Primary  
