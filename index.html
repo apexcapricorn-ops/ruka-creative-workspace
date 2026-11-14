@@ -343,6 +343,116 @@ async function connectGoogleDrive() {
   }
 }
 
+
+async function initGoogleDrive() {
+  await Promise.all([
+  loadGoogleScript(
+    "https://apis.google.com/js/api.js",
+    () => !!window.gapi
+  ),
+  loadGoogleScript(
+    "https://accounts.google.com/gsi/client",
+    () => !!window.google?.accounts?.oauth2
+  )
+]);
+  }
+
+  await new Promise((resolve, reject) => {
+    gapi.load("client", {
+      callback: resolve,
+      onerror: () => reject(new Error("Google API gagal dimuat."))
+    });
+  });
+
+  await gapi.client.init({
+    discoveryDocs: [GOOGLE_DISCOVERY_DOC]
+  });
+
+  driveTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: GOOGLE_SCOPES,
+    callback: async (response) => {
+      if (response.error) {
+        driveConnected = false;
+        console.error("Google OAuth:", response);
+        toast("Google login gagal");
+        return;
+      }
+
+      driveAccessToken = response.access_token;
+      driveConnected = true;
+
+      gapi.client.setToken({
+        access_token: driveAccessToken
+      });
+
+      try {
+        const result = await gapi.client.drive.files.list({
+          pageSize: 10,
+          q: "trashed = false",
+          fields: "files(id,name,mimeType)"
+        });
+
+        const files = result.result.files || [];
+
+        modal(`
+          <h3>Google Drive Connected</h3>
+          <p>${bd("Connected","#A7F508")}</p>
+          <p>Pengujian berhasil. RUKA dapat membaca Google Drive.</p>
+          <p>File ditemukan: <b>${files.length}</b></p>
+          <small>Akses read-only. Tidak ada file yang diubah.</small>
+          <div class="row">
+            <button class="b" data-x>Close</button>
+          </div>
+        `);
+      } catch (error) {
+        driveConnected = false;
+        console.error("Drive API:", error);
+        toast("Gagal membaca Google Drive");
+      }
+    }
+  });
+}
+
+
+
+function loadGoogleScript(src, isReady) {
+  if (isReady()) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+
+    script.onload = () => {
+      if (isReady()) resolve();
+      else reject(new Error("Google library gagal diinisialisasi."));
+    };
+
+    script.onerror = () => {
+      reject(new Error("Tidak bisa memuat Google library."));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
+async function connectGoogleDrive() {
+  try {
+    await initGoogleDrive();
+    driveTokenClient.requestAccessToken({prompt: "consent"});
+  } catch (error) {
+    console.error(error);
+    modal(`
+      <h3>Google Drive</h3>
+      <p>${error.message}</p>
+      <div class="row">
+        <button class="b" data-x>Close</button>
+      </div>
+    `);
+  }
+}
+
 const more=()=>`<h1>More</h1><div class="gr">${MORE.map(x=>`<button class="cd" data-a="nav" data-v="${x[0]}" style="display:flex;gap:12px;align-items:center;font-weight:700">${ic(x[2])}${x[1]}</button>`).join('')}</div>`;
 const PG={dash,tasks,projects,cal,notes,finance,settings,more};
 function render(){const on=v=>v==view||(v=='more'&&MORE.some(x=>x[0]==view))?'on':'',ni=n=>`<button class="ni ${on(n[0])}" data-a="nav" data-v="${n[0]}">${ic(n[2])}<span>${n[1]}</span></button>`;
