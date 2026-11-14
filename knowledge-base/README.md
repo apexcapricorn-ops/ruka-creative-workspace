@@ -20,3 +20,8 @@ RUKA digunakan untuk mencatat, mengorganisir, dan memantau proyek. RUKA **bukan 
 
 ## Prinsip
 Google Drive tetap menjadi sumber file asli. Repository ini berisi dokumentasi dan struktur pengetahuan. Jangan mengubah sumber asli tanpa instruksi eksplisit.
+
+## Project tracking system
+- [Project Tracking Index](project-tracking/README.md)
+- [Project Record Template](project-tracking/project-record-template.md)
+- [Statuses and Workflow](project-tracking/statuses-and-workflow.md)
