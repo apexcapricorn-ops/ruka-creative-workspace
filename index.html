@@ -132,7 +132,16 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-</style></head><body><div id="app"></div>
+</style>
+
+<!-- Google Drive API -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
+
+</head>
+<body>
+  
+  <div id="app"></div>
 <script>
 const $=i=>document.getElementById(i),e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),R=n=>'Rp'+Math.round(n||0).toLocaleString('id-ID'),uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),T=()=>iso(new Date()),dd=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
